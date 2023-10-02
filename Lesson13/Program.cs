@@ -116,6 +116,57 @@
                 return new SoftToy();
             }
         }
+
+        //strategy
+
+        interface IShippingStrategy
+        {
+            float CalculationShippingCost(float orderAmount);
+        }
+
+        class Customer
+        {
+            private string name;
+            private IShippingStrategy shippingStrategy;
+
+            public Customer(string name, IShippingStrategy shippingStrategy)
+            {
+                this.name = name;
+                this.shippingStrategy = shippingStrategy;
+            }
+
+            public void SetShippingStrategy(IShippingStrategy strategy)
+            {
+                shippingStrategy = strategy;
+            }
+
+            public float CalculationCost(float orderAmount)
+            {
+                return shippingStrategy.CalculationShippingCost(orderAmount);
+            }
+
+            public void ProcessOrder(float orderAmount)
+            {
+                double shippingCost = CalculationCost(orderAmount);
+                Console.WriteLine($"Customer {name}: order processing...");
+                Console.WriteLine($"Customer {name}: shipping cost - {shippingCost}");
+            }
+        }
+
+        class RegularShippingStrategy : IShippingStrategy
+        {
+            public float CalculationShippingCost(float orderAmount)
+            {
+                return orderAmount * 0.25f;
+            }
+        }
+        class ExpressShippingStrategy : IShippingStrategy
+        {
+            public float CalculationShippingCost(float orderAmount)
+            {
+                return orderAmount * 0.40f;
+            }
+        }
         public static void Main(string[] args)
         {
             //singleton
@@ -139,6 +190,14 @@
             doll.Play();
             car.Play(); 
             softtoy.Play();
+
+            //strategy
+            Customer customer1 = new Customer("Customer1", new RegularShippingStrategy());
+            customer1.ProcessOrder(100);
+
+            Customer customer2 = new Customer("Customer2", new ExpressShippingStrategy());
+            customer2.ProcessOrder(100);
+
         }
     }
 }
