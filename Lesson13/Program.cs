@@ -3,7 +3,7 @@
     public partial class Program
     {
         //SINGLETON
-        class SingleTon
+        private class SingleTon
         {
             private static SingleTon single = null;
 
@@ -12,7 +12,7 @@
 
             }
 
-            public static SingleTon Initialize()
+            private static SingleTon Initialize()
             {
                 if (single == null)
                 {
