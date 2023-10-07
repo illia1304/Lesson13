@@ -3,23 +3,32 @@
     public partial class Program
     {
         //SINGLETON
-        private class SingleTon
+        public class Singleton
         {
-            private static SingleTon single = null;
+            private static object s_lock = new object();
+            private static Singleton? s_instance = null;
 
-            protected SingleTon()
+            public static Singleton Instance
             {
+                get
+                {
+                    if (s_instance == null)
+                    {
+                        lock (s_lock)
+                        {
+                            if (s_instance == null)
+                            {
+                                s_instance = new Singleton();
+                            }
+                        }
+                    }
 
+                    return s_instance;
+                }
             }
 
-            private static SingleTon Initialize()
+            private Singleton()
             {
-                if (single == null)
-                {
-                    single = new SingleTon();
-                }
-
-                return single;
             }
         }
 
@@ -170,8 +179,8 @@
         public static void Main(string[] args)
         {
             //singleton
-            SingleTon s1 = SingleTon.Initialize();
-            SingleTon s2 = SingleTon.Initialize();
+            Singleton s1 = Singleton.Instance;
+            Singleton s2 = Singleton.Instance;
 
             Console.WriteLine(s1 == s2 ? 1 : 0);
 
